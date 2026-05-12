@@ -28,16 +28,16 @@ public class CopyPasteAccessibilityService extends AccessibilityService {
     public void performSelectAllThenCopy() {
         AccessibilityNodeInfo node = findFocusedEditableNode();
         if (node == null) return;
-        node.performAction(AccessibilityNodeInfo.ACTION_SELECT_ALL);
-        node.performAction(AccessibilityNodeInfo.ACTION_COPY);
+        node.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SELECT_ALL.getId());
+        node.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_COPY.getId());
         node.recycle();
     }
 
     public void performSelectAllThenPaste() {
         AccessibilityNodeInfo node = findFocusedEditableNode();
         if (node == null) return;
-        node.performAction(AccessibilityNodeInfo.ACTION_SELECT_ALL);
-        node.performAction(AccessibilityNodeInfo.ACTION_PASTE);
+        node.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SELECT_ALL.getId());
+        node.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_PASTE.getId());
         node.recycle();
     }
 
