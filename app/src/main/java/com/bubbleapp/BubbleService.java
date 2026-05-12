@@ -108,13 +108,16 @@ public class BubbleService extends Service {
         panelView = LayoutInflater.from(this).inflate(R.layout.view_panel, null);
 
         panelParams = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
+                220,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT
         );
-        panelParams.gravity = Gravity.CENTER;
+        panelParams.gravity = Gravity.TOP | Gravity.START;
+        panelParams.x = 80;
+        panelParams.y = 250;
 
         // Copy button: Select All then Copy via AccessibilityService
         panelView.findViewById(R.id.btnCopy).setOnClickListener(v -> {
@@ -140,6 +143,34 @@ public class BubbleService extends Service {
 
         // Minimize button
         panelView.findViewById(R.id.btnMinimize).setOnClickListener(v -> showBubble());
+
+        // Drag the panel by touching its background area
+        panelView.setOnTouchListener(new View.OnTouchListener() {
+            int startX, startY;
+            float startTouchX, startTouchY;
+            boolean dragging;
+            @Override
+            public boolean onTouch(View v, MotionEvent e) {
+                switch (e.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        startX = panelParams.x; startY = panelParams.y;
+                        startTouchX = e.getRawX(); startTouchY = e.getRawY();
+                        dragging = false;
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        int dx = (int)(e.getRawX() - startTouchX);
+                        int dy = (int)(e.getRawY() - startTouchY);
+                        if (Math.abs(dx) > 8 || Math.abs(dy) > 8) dragging = true;
+                        if (dragging) {
+                            panelParams.x = startX + dx;
+                            panelParams.y = startY + dy;
+                            windowManager.updateViewLayout(panelView, panelParams);
+                        }
+                        return true;
+                }
+                return false;
+            }
+        });
 
         windowManager.addView(panelView, panelParams);
     }
