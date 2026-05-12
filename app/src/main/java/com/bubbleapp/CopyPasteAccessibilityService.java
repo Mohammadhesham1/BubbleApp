@@ -32,7 +32,9 @@ public class CopyPasteAccessibilityService extends AccessibilityService {
     public void performSelectAllThenCopy() {
         AccessibilityNodeInfo node = findFocusedEditableNode();
         if (node == null) return;
+        // Select all text in the field first
         node.performAction(ACTION_SELECT_ALL);
+        // Then copy the selection to clipboard
         node.performAction(ACTION_COPY);
         node.recycle();
     }
@@ -40,7 +42,9 @@ public class CopyPasteAccessibilityService extends AccessibilityService {
     public void performSelectAllThenPaste() {
         AccessibilityNodeInfo node = findFocusedEditableNode();
         if (node == null) return;
+        // Select all existing text first (so paste replaces it)
         node.performAction(ACTION_SELECT_ALL);
+        // Then paste clipboard over the selection
         node.performAction(ACTION_PASTE);
         node.recycle();
     }
@@ -49,13 +53,32 @@ public class CopyPasteAccessibilityService extends AccessibilityService {
         AccessibilityNodeInfo root = getRootInActiveWindow();
         if (root == null) return null;
 
-        // Try input-focused first, then accessibility-focused
+        // First try: keyboard-focused node (cursor is in this field)
         AccessibilityNodeInfo node = root.findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
+
+        // Second try: walk tree for any focused editable node
         if (node == null) {
-            node = root.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY);
+            node = findEditableNode(root);
+        }
+
+        if (node != null && node == root) {
+            // don't recycle root if we're returning it
+            return node;
         }
         root.recycle();
         return node;
+    }
+
+    private AccessibilityNodeInfo findEditableNode(AccessibilityNodeInfo node) {
+        if (node == null) return null;
+        if (node.isEditable() && node.isFocused()) return node;
+        for (int i = 0; i < node.getChildCount(); i++) {
+            AccessibilityNodeInfo child = node.getChild(i);
+            AccessibilityNodeInfo result = findEditableNode(child);
+            if (child != null && result == null) child.recycle();
+            if (result != null) return result;
+        }
+        return null;
     }
 
     @Override
