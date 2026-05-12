@@ -1,11 +1,15 @@
 package com.bubbleapp;
 
 import android.accessibilityservice.AccessibilityService;
-import android.os.Bundle;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 public class CopyPasteAccessibilityService extends AccessibilityService {
+
+    // Raw action IDs — stable across all API levels, no symbol lookup needed
+    private static final int ACTION_SELECT_ALL = 0x00100000; // AccessibilityNodeInfo.ACTION_SELECT_ALL
+    private static final int ACTION_COPY       = 0x00004000; // AccessibilityNodeInfo.ACTION_COPY
+    private static final int ACTION_PASTE      = 0x00008000; // AccessibilityNodeInfo.ACTION_PASTE
 
     private static CopyPasteAccessibilityService instance;
 
@@ -28,16 +32,16 @@ public class CopyPasteAccessibilityService extends AccessibilityService {
     public void performSelectAllThenCopy() {
         AccessibilityNodeInfo node = findFocusedEditableNode();
         if (node == null) return;
-        node.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SELECT_ALL.getId());
-        node.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_COPY.getId());
+        node.performAction(ACTION_SELECT_ALL);
+        node.performAction(ACTION_COPY);
         node.recycle();
     }
 
     public void performSelectAllThenPaste() {
         AccessibilityNodeInfo node = findFocusedEditableNode();
         if (node == null) return;
-        node.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SELECT_ALL.getId());
-        node.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_PASTE.getId());
+        node.performAction(ACTION_SELECT_ALL);
+        node.performAction(ACTION_PASTE);
         node.recycle();
     }
 
