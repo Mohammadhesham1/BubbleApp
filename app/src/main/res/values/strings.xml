@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BubbleApp</string>
+    <string name="accessibility_description">Allows BubbleApp to copy and paste text in any app</string>
+</resources>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="160dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/panel_bg"
+    android:padding="12dp"
+    android:elevation="16dp">
+
+    <!-- Minimize -->
+    <ImageButton
+        android:id="@+id/btnMinimize"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_gravity="end"
+        android:layout_marginBottom="8dp"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:background="@drawable/round_btn_bg"
+        android:tint="#FFFFFF"
+        android:contentDescription="Minimize"
+        android:padding="4dp"/>
+
+    <!-- Copy -->
+    <Button
+        android:id="@+id/btnCopy"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="Copy"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:backgroundTint="#4F8EF7"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Paste -->
+    <Button
+        android:id="@+id/btnPaste"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="Paste"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:backgroundTint="#34C48B"
+        android:textColor="#FFFFFF"/>
+
+</LinearLayout>
